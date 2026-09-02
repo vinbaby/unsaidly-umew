@@ -1,1 +1,49 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unsaidly V2</title><link rel="stylesheet" href="style.css"></head><body><div class="app"><header><img src="../UI/icon.png" class="logo"><div><b>Unsaidly</b><small>Say what you can't say out loud.</small></div><button class="compose" onclick="openComposer()">＋</button></header><nav id="tabs"><button class="active" onclick="showPage('home',this)">Khám phá</button><button onclick="showPage('following',this)">Theo dõi</button><button onclick="showPage('latest',this)">Mới nhất</button><button onclick="showPage('profile',this)">Tôi</button></nav><main><section id="home" class="page"><section class="hero"><div><h1>Những điều chưa từng nói.</h1><p>Một nơi để chia sẻ suy nghĩ, câu chuyện và cảm xúc của bạn.</p><button onclick="openComposer()">Viết điều chưa nói</button></div><img src="../UI/mainposes.png"></section><section id="feed" class="feed"></section></section><section id="following" class="page hidden state"><img src="../UI/nothing here.png"><h2>Chưa theo dõi ai</h2><p>Những câu chuyện bạn quan tâm sẽ xuất hiện ở đây.</p></section><section id="latest" class="page hidden"><section class="hero mini"><div><h1>Mới nhất</h1><p>Những điều vừa được nói ra.</p></div><img src="../UI/ui rest.png"></section><section id="latestFeed" class="feed"></section></section><section id="profile" class="page hidden profile"><img src="../UI/emty states.png"><h2>Góc của bạn</h2><p>Những điều bạn viết trong phiên này.</p><div id="profileFeed" class="feed"></div><button onclick="openComposer()">Viết bài đầu tiên</button></section><section id="detail" class="page hidden"><button class="back" onclick="backHome()">← Quay lại</button><div id="detailPost"></div><section class="comments"><h2>Bình luận</h2><div id="commentList"></div><div class="commentBox"><input id="commentInput" placeholder="Viết phản hồi ẩn danh..."><button onclick="addComment()">Gửi</button></div></section></section></main><div id="modal" class="modal"><div class="dialog"><button class="close" onclick="openComposer()">×</button><img src="../UI/ui1.png"><h2>Điều bạn muốn nói?</h2><input id="title" placeholder="Tiêu đề (không bắt buộc)"><textarea id="thought" placeholder="Viết điều chưa từng nói..."></textarea><div class="moods"><button onclick="setMood('💜')">💜</button><button onclick="setMood('🌧️')">🌧️</button><button onclick="setMood('✨')">✨</button><button onclick="setMood('❤️')">❤️</button></div><button class="publish" onclick="publish()">Đăng ẩn danh</button></div></div><footer>Unsaidly V2 · nơi cảm xúc được lắng nghe</footer></div><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="vi"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unsaidly — Những điều chưa từng nói</title>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<div class="app">
+<header>
+  <div class="brand"><div class="logoWrap"><img src="../UI/icon.png" class="logo"></div><div><b>Unsaidly</b><small>Say what you can't say out loud.</small></div></div>
+  <div class="headerRight"><span class="online">●</span><button class="compose topCompose" onclick="openComposer()">＋</button></div>
+</header>
+<nav id="tabs">
+ <button class="active" onclick="showPage('home',this)"><span>⌂</span>Khám phá</button>
+ <button onclick="showPage('following',this)"><span>♡</span>Theo dõi</button>
+ <button onclick="showPage('latest',this)"><span>✦</span>Mới nhất</button>
+ <button onclick="showPage('profile',this)"><span>☺</span>Tôi</button>
+</nav>
+<main>
+<section id="home" class="page">
+ <section class="hero">
+  <div class="glow glow1"></div><div class="glow glow2"></div>
+  <div class="heroText"><div class="eyebrow">✦ MỘT NƠI AN TOÀN ĐỂ LẮNG NGHE</div>
+   <h1>Những điều<br><em>chưa từng nói.</em></h1>
+   <p>Không cần tên. Không cần phán xét.<br>Chỉ cần một nơi để bạn được là chính mình.</p>
+   <button onclick="openComposer()" class="heroBtn">✎ Viết điều chưa nói <span>→</span></button>
+  </div><img src="../UI/mainposes.png" class="heroArt">
+ </section>
+ <div class="sectionHead"><div><h2>Đang được sẻ chia</h2><p>Những tâm sự mới nhất từ cộng đồng</p></div><span class="liveDot">● LIVE</span></div>
+ <section id="feed" class="feed"></section>
+</section>
+<section id="following" class="page hidden state"><div class="emptyOrb"><img src="../UI/nothing here.png"></div><h2>Chưa theo dõi ai</h2><p>Những câu chuyện bạn quan tâm sẽ xuất hiện ở đây.</p><button onclick="showPage('home',document.querySelector('#tabs button'))">Khám phá ngay</button></section>
+<section id="latest" class="page hidden">
+ <section class="latestHero"><div><span>✦ VỪA ĐƯỢC NÓI RA</span><h1>Mới nhất</h1><p>Những cảm xúc vừa tìm được tiếng nói.</p></div><img src="../UI/ui rest.png"></section>
+ <section id="latestFeed" class="feed"></section>
+</section>
+<section id="profile" class="page hidden profile"><div class="emptyOrb"><img src="../UI/emty states.png"></div><h2>Góc của bạn</h2><p>Những điều bạn viết trong phiên này sẽ được giữ ở đây.</p><div id="profileFeed" class="feed"></div><button onclick="openComposer()" class="heroBtn">✎ Viết điều đầu tiên</button></section>
+<section id="detail" class="page hidden"><button class="back" onclick="backHome()">← Quay lại Khám phá</button><div id="detailPost"></div><section class="comments"><div class="sectionHead"><div><h2>Những lời hồi đáp</h2><p>Có thể ai đó cũng đang cảm thấy như bạn.</p></div></div><div id="commentList"></div><div class="commentBox"><input id="commentInput" placeholder="Viết phản hồi ẩn danh..."><button onclick="addComment()">Gửi <span>→</span></button></div></section></section>
+</main>
+<button class="floatingWrite" onclick="openComposer()"><span>＋</span><b>Nói điều chưa nói</b></button>
+<div id="modal" class="modal"><div class="dialog">
+ <div class="dialogTop"><div><span class="eyebrow">KHÔNG CẦN DANH TÍNH</span><h2>Điều bạn muốn nói?</h2></div><button class="close" onclick="openComposer()">×</button></div>
+ <img src="../UI/ui1.png" class="dialogArt">
+ <input id="title" placeholder="Đặt một tiêu đề cho tâm sự..."><textarea id="thought" placeholder="Cứ viết đi... Không ai biết bạn là ai."></textarea>
+ <p class="moodLabel">Cảm xúc của bạn lúc này?</p><div class="moods">
+ <button onclick="setMood('💜')" title="Tâm sự">💜</button><button onclick="setMood('🌧️')" title="Buồn">🌧️</button><button onclick="setMood('✨')" title="Hy vọng">✨</button><button onclick="setMood('❤️')" title="Yêu thương">❤️</button>
+ </div><button class="publish" onclick="publish()">Đăng điều này ẩn danh <span>→</span></button><small class="privacy">🔒 Danh tính của bạn không được hiển thị</small>
+</div></div>
+<footer><div class="footerLogo">✦ Unsaidly</div><p>Một góc nhỏ để những điều chưa từng nói được lắng nghe.</p></footer>
+</div><script src="app.js"></script></body></html>
