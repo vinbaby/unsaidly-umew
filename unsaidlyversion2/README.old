@@ -1,0 +1,22 @@
+# Pigpic V16 — Upload hoàn chỉnh
+
+## Deploy
+1. **Worker `pigpic-api`**: deploy `worker.js` và giữ binding R2 `BUCKET -> pigpic`.
+2. **Pages `pigpic`**: upload toàn bộ thư mục source này.
+
+## Hệ thống đăng ảnh
+- JPG / PNG / WebP, tối đa 10 MB ảnh gốc.
+- Chuẩn hóa ảnh về JPEG, tối đa 2048px cạnh lớn.
+- Xóa metadata/EXIF bằng cách re-encode trên trình duyệt.
+- Tạo thumbnail JPEG 640px cho feed.
+- Upload ảnh chính + thumbnail song song, có % tiến trình.
+- Caption tối đa 1000 ký tự.
+- Tối đa 20 hashtag, tự bỏ dấu `#` và chuẩn hóa chữ thường.
+- Đánh dấu nội dung 18+ / nhạy cảm.
+- Kéo-thả ảnh vào vùng chọn ảnh.
+- Nếu upload hoặc lưu bài thất bại, tự xóa các object R2 đã upload để hạn chế file rác.
+- Object R2 lưu `user_id` trong custom metadata để endpoint cleanup chỉ cho chủ object xóa.
+
+Không cần chạy SQL mới cho V16; dùng schema posts/thumb_key hiện tại.
+
+V17 Profile Media: avatar/cover upload via authenticated Worker; avatar URL field removed from UI. Run supabase_v16_profile_media.sql once.
