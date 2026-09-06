@@ -3,8 +3,8 @@
   const textMap=new Map([
     ['Trang chủ','Home'],['Thịnh hành','Trending'],['Mới nhất','Latest'],['Ngẫu nhiên','Random'],['Mood thế giới','World Mood'],
     ['Khám phá','Explore'],['Tình yêu','Love'],['Học tập','School'],['Công việc','Work'],['Gia đình','Family'],['Bạn bè','Friends'],
-    ['Viết gì đó...','Create post...'],['Dành cho bạn','For You'],['Explore feelings','Explore feelings'],['Cảm xúc thế giới','World emotions'],
-    ['UMEW nói...','UMEW says...'],['bài','posts'],['Chưa có bài phù hợp.','No matching posts yet.'],
+    ['Viết gì đó...','Create post...'],['Dành cho bạn','For You'],['Explore feelings','Explore Feelings'],['Cảm xúc thế giới','Global Feelings'],
+    ['📊 Cảm xúc thế giới','📊 Global Feelings'],['UMEW nói...','UMEW says...'],['bài','posts'],['Chưa có bài phù hợp.','No matching posts yet.'],
     ['Không tìm thấy tâm sự phù hợp.','No matching thoughts found.'],['Hủy','Cancel'],['Đóng','Close'],['Báo cáo','Report'],
     ['Chọn lý do báo cáo bài viết.','Choose a reason for reporting this post.'],['Say it here.','Say it here.'],
     ['Hãy cứ nói ra, ở đây không ai phán xét.','Say it here. Nobody is judging.'],['Tìm cảm xúc, từ khóa, hashtag...','Search feelings, keywords, hashtags...'],
@@ -26,7 +26,7 @@
     ['Nói gì đó một cách ẩn danh...','Say something anonymously...'],
     ['Chưa gắn Supabase nên dữ liệu chỉ lưu trong browser.','Supabase is not connected, so data is stored only in this browser.'],
     ['Tình yêu','Love'],['Học tập','School'],['Công việc','Work'],['Gia đình','Family'],['Bạn bè','Friends'],
-    ['Tâm sự','Thoughts'],['Reply','Reply'],['bài','posts'],['Viết','Write'],['Trang chủ','Home'],['Thịnh hành','Trending'],['Mới nhất','Latest'],['Ngẫu nhiên','Random'],['Khám phá','Explore'],['Cảm xúc thế giới','World emotions'],['UMEW nói...','UMEW says...'],['Hủy','Cancel'],['Đóng','Close'],['Báo cáo','Report']
+    ['Tâm sự','Thoughts'],['Reply','Reply'],['bài','posts'],['Viết','Write'],['Trang chủ','Home'],['Thịnh hành','Trending'],['Mới nhất','Latest'],['Ngẫu nhiên','Random'],['Khám phá','Explore'],['Cảm xúc thế giới','Global Feelings'],['📊 Cảm xúc thế giới','📊 Global Feelings'],['UMEW nói...','UMEW says...'],['Hủy','Cancel'],['Đóng','Close'],['Báo cáo','Report']
   ];
   function translate(root=document.body){
     const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
