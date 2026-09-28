@@ -11,3 +11,16 @@
 .ad-300x250 iframe{width:300px!important;height:250px!important}
 @media(max-width:820px){.ad-728x90{display:none}.ad-320x50{display:flex;min-height:50px}.ad-300x250{min-height:250px;padding:0}.ad-300x250 iframe{max-width:300px!important}}
 @media(max-width:360px){.ad-320x50 iframe{width:100%!important;max-width:320px!important;height:50px!important}.ad-300x250 iframe{width:100%!important;max-width:300px!important;height:250px!important}}
+/* Right rail 300x250 ad: keep the card exactly the network size */
+.ad-right{width:300px!important;height:250px!important;min-width:300px!important;max-width:300px!important;min-height:250px!important;max-height:250px!important;padding:0!important;margin:0 auto!important;display:block!important;position:relative!important;overflow:hidden!important}
+.ad-right .ad-network-unit{width:300px!important;height:250px!important;min-width:300px!important;max-width:300px!important;min-height:250px!important;max-height:250px!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;margin:0!important;padding:0!important}
+.ad-right .ad-network-unit iframe{width:300px!important;height:250px!important;min-width:300px!important;max-width:300px!important;min-height:250px!important;max-height:250px!important;border:0!important;display:block!important}
+.ad-right .ad-label{position:absolute;top:10px;left:12px;z-index:5;margin:0;pointer-events:none}
+.ad-right .ad-sponsored{position:absolute;right:12px;bottom:10px;z-index:5}
+/* Left rail ad is also a true 300x250 slot */
+.ad-sidebar{width:300px!important;height:250px!important;min-width:300px!important;max-width:300px!important;min-height:250px!important;max-height:250px!important;padding:0!important;margin:0 auto 4px!important;position:relative!important;overflow:hidden!important}
+.ad-sidebar .ad-network-unit{width:300px!important;height:250px!important;min-width:300px!important;max-width:300px!important;min-height:250px!important;max-height:250px!important;display:flex!important;align-items:flex-start!important;justify-content:center!important}
+.ad-sidebar .ad-network-unit iframe{width:300px!important;height:250px!important;max-width:300px!important;max-height:250px!important;border:0!important}
+.ad-sidebar .ad-label{position:absolute;top:10px;left:12px;z-index:5;margin:0;pointer-events:none}
+.ad-sidebar .ad-sponsored{z-index:5}
+@media(max-width:1200px){.ad-sidebar{display:none!important}}
