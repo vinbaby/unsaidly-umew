@@ -103,3 +103,98 @@ footer a{color:#656c76}
   .composer-wrap{padding:8px 14px 9px}
   footer{padding:6px 2px}
 }
+
+
+/* ===== Wider editorial layout + side banner placements ===== */
+.shell{max-width:1820px;padding:0 22px 16px}
+.topbar{height:68px}
+.chat-layout{
+  display:grid;
+  grid-template-columns:clamp(170px,13vw,320px) minmax(0,1fr) clamp(170px,13vw,320px);
+  gap:20px;
+  align-items:stretch;
+}
+.chat-card{grid-column:2;min-width:0;border-radius:20px}
+.side-ad{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-width:0;
+  padding-top:112px;
+}
+.side-ad .ad-slot{
+  width:100%;
+  max-width:320px;
+  height:auto;
+  aspect-ratio:320 / 50;
+  flex:none;
+  border:1px solid #e1e4e8;
+  border-radius:9px;
+  background:linear-gradient(145deg,#fff,#f8f9fb);
+  color:#89919b;
+  gap:3px;
+  box-shadow:0 6px 20px #2430440a;
+}
+.side-ad .ad-slot span{font-size:9px;letter-spacing:1.6px}
+.side-ad .ad-slot small{font-size:9px;color:#a0a6af}
+.chat-heading{padding:20px 24px}
+.room-symbol{width:48px;height:48px}
+.room-title h1{font-size:25px}
+.room-title p{font-size:12px}
+.room-meta{font-size:11px}
+.chat-notice{padding:10px 20px;font-size:11px}
+.messages{
+  height:clamp(260px,calc(100dvh - 440px),540px);
+  min-height:260px;
+  padding:18px 24px 24px;
+}
+.welcome{padding:48px 15px 42px}
+.welcome-symbol{font-size:36px}
+.welcome h2{font-size:31px}
+.welcome p{font-size:12px}
+.message{grid-template-columns:58px minmax(0,1fr);gap:14px;padding:12px 10px}
+.message-time{font-size:11px}
+.message-meta{font-size:11px;margin-bottom:6px}
+.message-name{font-size:12px}
+.bubble{font-size:14px;line-height:1.65}
+.translate-button,.report-button{font-size:10px}
+.composer-wrap{padding:14px 20px 16px}
+.composer-tools{font-size:10px;margin-bottom:10px}
+.composer{padding:13px 14px 11px}
+.composer textarea{font-size:15px;min-height:34px}
+.composer-bottom{padding-top:9px}
+.char-count{font-size:10px}
+.enter-hint{font-size:11px}
+.send-button{padding:11px 16px;font-size:12px}
+.turnstile-container{max-width:320px;margin:0 0 9px auto}
+.bottom-ad,.top-ad,.mobile-ad{display:none!important}
+footer{padding:12px 2px;font-size:10px}
+@media(max-width:1250px){
+  .chat-layout{grid-template-columns:clamp(150px,12vw,190px) minmax(0,1fr) clamp(150px,12vw,190px);gap:14px}
+  .side-ad .ad-slot{max-width:100%}
+  .chat-heading{padding:16px 18px}
+  .messages{padding-left:17px;padding-right:17px}
+}
+@media(max-width:1050px){
+  .shell{padding:0 14px 12px}
+  .chat-layout{display:block}
+  .side-ad{display:none}
+  .chat-card{width:100%}
+}
+@media(max-width:700px){
+  .topbar{height:56px}
+  .chat-heading{padding:12px}
+  .room-title h1{font-size:18px}
+  .room-title p{font-size:10px}
+  .chat-notice{padding:8px 11px;font-size:9px}
+  .messages{height:clamp(190px,calc(100dvh - 390px),380px);min-height:190px;padding:8px 7px 12px}
+  .message{grid-template-columns:39px minmax(0,1fr);gap:8px;padding:9px 5px}
+  .message-time{font-size:9px}
+  .message-name{font-size:10px}
+  .bubble{font-size:12px;line-height:1.55}
+  .composer-wrap{padding:9px}
+  .composer textarea{font-size:13px;min-height:27px}
+  .composer-tools{font-size:8px}
+  .send-button{padding:9px 10px;font-size:10px}
+  footer{font-size:8px}
+}
