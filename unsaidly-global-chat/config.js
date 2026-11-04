@@ -5,7 +5,7 @@ window.UNSAIDLY_CHAT_CONFIG = {
   // Cloudflare Worker URL, e.g. https://unsaidly-chat-api.yourname.workers.dev
   workerUrl: "",
   // Cloudflare Turnstile PUBLIC site key (safe in browser); secret key belongs in Worker secrets.
-  turnstileSiteKey: "",
+  turnstileSiteKey: "1x00000000000000000000AA", // Cloudflare test sitekey; replace before production
   // LibreTranslate endpoint; leave empty until configured.
   translateUrl: "",
   // Only use a public/client-safe translation API key. Do not put provider secret keys here.
