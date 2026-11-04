@@ -1,7 +1,7 @@
 // Browser-safe config only. Never put Supabase service_role or Turnstile secret keys here.
 window.UNSAIDLY_CHAT_CONFIG = {
-  supabaseUrl: "PASTE_SUPABASE_URL",
-  supabaseAnonKey: "PASTE_SUPABASE_PUBLISHABLE_OR_ANON_KEY",
+  supabaseUrl: "https://tdrohnjfyhngzopjccrx.supabase.co",
+  supabaseAnonKey: "sb_publishable_lOhwWvuxpxqt2W_sBDi01g_RxflW6Ih",
   // Cloudflare Worker URL, e.g. https://unsaidly-chat-api.yourname.workers.dev
   workerUrl: "",
   // Cloudflare Turnstile PUBLIC site key (safe in browser); secret key belongs in Worker secrets.
