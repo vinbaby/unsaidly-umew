@@ -1,0 +1,9 @@
+name = "unsaidly-global-chat-api"
+main = "worker.js"
+compatibility_date = "2026-10-30"
+
+[vars]
+# For initial testing use "*" and later replace with your exact Pages/domain origins.
+# Comma-separated origins are supported by worker.js.
+ALLOWED_ORIGIN = "*"
+TURNSTILE_REQUIRED = "true"
