@@ -54,7 +54,7 @@ create policy "Anyone can submit a report"
 create or replace function public.limit_global_chat_rate()
 returns trigger
 language plpgsql
-security definer
+security invoker
 set search_path = public
 as $$
 begin
