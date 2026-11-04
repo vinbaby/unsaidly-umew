@@ -182,7 +182,7 @@
   $("rulesButton").addEventListener("click", () => $("infoDialog").showModal());
   $("privacyLink").addEventListener("click", e => {
     e.preventDefault(); $("dialogTitle").textContent="Privacy & safety";
-    $("dialogBody").textContent="No account or real name is required. Your anonymous browser ID is stored locally to label messages and presence. Chat messages are public to everyone in the room. Do not share your address, phone number, passwords or other private details. Anonymous chat does not mean network metadata is invisible to the hosting provider.";
+    $("dialogBody").textContent="No account or real name is required. Your anonymous browser ID is stored locally to label messages and presence. Chat messages are public to everyone in the room. If you tap Translate, that message text is sent to a third-party translation provider (MyMemory by default). Do not share your address, phone number, passwords or other private details. Anonymous chat does not mean network metadata is invisible to the hosting provider.";
     $("infoDialog").showModal();
   });
   $("closeDialog").addEventListener("click", () => $("infoDialog").close());
