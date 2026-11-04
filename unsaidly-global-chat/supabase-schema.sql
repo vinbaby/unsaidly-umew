@@ -83,9 +83,18 @@ create trigger global_chat_rate_limit
 before insert on public.global_chat_messages
 for each row execute function public.limit_global_chat_rate();
 
--- Realtime setup. If this table is already in the publication, this line may
--- report a duplicate membership; in that case skip it.
-alter publication supabase_realtime add table public.global_chat_messages;
+-- Idempotently add the table to Supabase Realtime.
+do $
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'global_chat_messages'
+  ) then
+    alter publication supabase_realtime add table public.global_chat_messages;
+  end if;
+end $;
 
 -- Suggested retention (run manually after choosing a retention period):
 -- delete from public.global_chat_messages where created_at < now() - interval '30 days';
