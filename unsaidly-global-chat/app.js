@@ -122,20 +122,29 @@
     const row = button.closest(".message"), bubble = row.querySelector(".bubble");
     const original = bubble.childNodes[0]?.textContent || bubble.textContent;
     const target = $("languageSelect").value;
-    if (!cfg.translateUrl) {
-      addTranslation(bubble, "Translation service not configured yet. Add a LibreTranslate URL in config.js.");
-      return;
-    }
     button.textContent = "Translating…"; button.disabled = true;
     try {
-      const response = await fetch(cfg.translateUrl.replace(/\/$/,"") + "/translate", {
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({q:original,source:"auto",target,format:"text",...(cfg.translateApiKey?{api_key:cfg.translateApiKey}:{})})
-      });
-      if (!response.ok) throw new Error("Translation service returned " + response.status);
-      const data = await response.json(); addTranslation(bubble, data.translatedText || "No translation returned.");
+      let translated = "";
+      if (cfg.translateUrl) {
+        const response = await fetch(cfg.translateUrl.replace(/\/$/,"") + "/translate", {
+          method:"POST",headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({q:original,source:"auto",target,format:"text",...(cfg.translateApiKey?{api_key:cfg.translateApiKey}:{})})
+        });
+        if (!response.ok) throw new Error("Translation service returned " + response.status);
+        const data = await response.json();
+        translated = data.translatedText || "";
+      } else {
+        // Default keyless provider for quick testing. Translation text is sent to MyMemory.
+        const params = new URLSearchParams({q:original,langpair:"autodetect|" + target});
+        const response = await fetch("https://api.mymemory.translated.net/get?" + params.toString());
+        if (!response.ok) throw new Error("Translation service returned " + response.status);
+        const data = await response.json();
+        if (Number(data.responseStatus) !== 200) throw new Error(data.responseDetails || "Translation unavailable");
+        translated = data.responseData?.translatedText || "";
+      }
+      addTranslation(bubble, translated || "No translation returned.");
       button.textContent = "Translated";
-    } catch(e) { button.textContent = "Translate"; addTranslation(bubble, "Translation failed. Check translation service or try again."); console.error(e); }
+    } catch(e) { button.textContent = "Translate"; addTranslation(bubble, "Translation failed. Try again later."); console.error(e); }
     finally { button.disabled = false; }
   }
   function addTranslation(bubble, text) {
