@@ -53,7 +53,7 @@
   function getTurnstileToken(){if(cfg.turnstileSiteKey&&!turnstileToken)throw new Error("Complete the security check first.");return turnstileToken;}
   function mountTurnstile(attempt=0){
     const container=$("turnstileContainer");if(!cfg.turnstileSiteKey)return;container.hidden=false;
-    if(window.turnstile?.render){turnstileWidget=window.turnstile.render(container,{sitekey:cfg.turnstileSiteKey,theme:"dark",callback:token=>{turnstileToken=token;updateInput();},"expired-callback":()=>{turnstileToken="";updateInput();},"error-callback":()=>{turnstileToken="";status("Security check error · reload and retry","error");updateInput();}});}
+    if(window.turnstile?.render){turnstileWidget=window.turnstile.render(container,{sitekey:cfg.turnstileSiteKey,theme:"light",callback:token=>{turnstileToken=token;updateInput();},"expired-callback":()=>{turnstileToken="";updateInput();},"error-callback":()=>{turnstileToken="";status("Security check error · reload and retry","error");updateInput();}});}
     else if(attempt<30)setTimeout(()=>mountTurnstile(attempt+1),300);else status("Turnstile failed to load","error");
   }
   async function postToWorker(path,payload){
