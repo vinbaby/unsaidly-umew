@@ -108,7 +108,7 @@
   async function sendMessage() {
     const body = input.value.trim();
     if (!body || body.length > 600 || !workerReady || sendBtn.disabled) return;
-    if (Date.now() - sentAt < 1800) { status("Slow down a little…", "error"); return; }
+    if (Date.now() - sentAt < 2100) { status("Slow down a little…", "error"); return; }
     sentAt = Date.now(); sendBtn.disabled = true;
     try {
       await postToWorker("/api/message", {anon_id:anonId,nickname:anonName,body});
