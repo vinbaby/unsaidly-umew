@@ -27,7 +27,7 @@ body{background:radial-gradient(ellipse at 50% -18%,#eee5da 0,transparent 40%),#
 .language-picker option{background:#fff;color:#222}
 .icon-button{border-color:#dfe2e6;background:#fff;color:#555b64}
 .ad-wrap{padding:6px 0}
-.ad-slot{height:48px;border-color:#dfe2e6;background:#fafbfc;color:#8c929b}
+.ad-slot{height:90px;border-color:#dfe2e6;background:#fafbfc;color:#8c929b}
 .ad-slot small{color:#a0a5ad}
 .chat-card{border-color:#e0e3e7;background:linear-gradient(160deg,#fff,#fbfbfc 70%);box-shadow:0 12px 40px #2632440d}
 .chat-heading{padding:16px 22px;border-bottom-color:#e9ebee}
@@ -87,7 +87,7 @@ footer a{color:#656c76}
   .shell{padding:0 10px 10px}
   .topbar{height:56px}
   .top-ad{padding:5px 0}
-  .top-ad .ad-slot{height:42px}
+  .top-ad .ad-slot{height:50px}
   .chat-heading{padding:12px}
   .chat-notice{padding:8px 11px}
   .messages{height:clamp(170px,calc(100dvh - 390px),340px);min-height:170px;padding:8px 7px 12px}
