@@ -29,8 +29,9 @@ const json = (data, status = 200, origin = "*") => new Response(JSON.stringify(d
 export default {
   async fetch(request, env) {
     const requestOrigin = request.headers.get("Origin") || "";
-    const allowed = env.ALLOWED_ORIGIN || "*";
-    const origin = allowed === "*" || requestOrigin === allowed ? (allowed === "*" ? "*" : requestOrigin) : "";
+    const allowed = (env.ALLOWED_ORIGIN || "*").split(",").map(value => value.trim()).filter(Boolean);
+    const wildcard = allowed.includes("*");
+    const origin = wildcard || allowed.includes(requestOrigin) ? (wildcard ? "*" : requestOrigin) : "";
     if (!origin) return json({ error: "Origin not allowed" }, 403, "null");
     if (request.method === "OPTIONS") return new Response(null, {
       status: 204,
