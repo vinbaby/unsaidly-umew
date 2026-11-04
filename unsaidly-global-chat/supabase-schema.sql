@@ -32,22 +32,13 @@ drop policy if exists "Anyone can read global chat" on public.global_chat_messag
 create policy "Anyone can read global chat"
   on public.global_chat_messages for select to anon, authenticated using (true);
 
+-- Writes are intentionally routed through the Cloudflare Worker, which validates
+-- Turnstile and uses the Supabase service key server-side.
 drop policy if exists "Anonymous users can send global chat messages" on public.global_chat_messages;
-create policy "Anonymous users can send global chat messages"
-  on public.global_chat_messages for insert to anon, authenticated
-  with check (
-    char_length(btrim(body)) between 1 and 600
-    and char_length(nickname) between 1 and 40
-    and char_length(anon_id) between 8 and 80
-  );
-
 drop policy if exists "Anyone can submit a report" on public.global_chat_reports;
-create policy "Anyone can submit a report"
-  on public.global_chat_reports for insert to anon, authenticated
-  with check (
-    char_length(btrim(reason)) between 1 and 250
-    and char_length(reporter_anon_id) between 8 and 80
-  );
+revoke insert, update, delete on public.global_chat_messages from anon, authenticated;
+revoke insert, update, delete on public.global_chat_reports from anon, authenticated;
+grant select on public.global_chat_messages to anon, authenticated;
 
 -- Basic per-anonymous-ID throttling. Users can reset/spoof browser IDs, so this is
 -- only a first layer. Add Turnstile + Edge Function/Worker IP-based limits before launch.
