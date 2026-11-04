@@ -14,7 +14,6 @@
   const newMessagesButton=document.createElement("button");
   newMessagesButton.type="button";newMessagesButton.className="new-messages";newMessagesButton.textContent="↓ New messages";
   Object.assign(newMessagesButton.style,{position:"absolute",left:"50%",transform:"translateX(-50%)",bottom:"145px",zIndex:"3",border:"1px solid #6d573f",borderRadius:"20px",padding:"8px 13px",background:"#2c241d",color:"#e0c09a",fontSize:"11px",boxShadow:"0 5px 20px #0008",cursor:"pointer",display:"none"});
-  $("chat-card")?.appendChild(newMessagesButton);
   document.querySelector(".chat-card").appendChild(newMessagesButton);
   if(!supabaseReady)status("Setup needed · Supabase config","error");
   else if(!workerReady)status("Setup needed · API config","error");
