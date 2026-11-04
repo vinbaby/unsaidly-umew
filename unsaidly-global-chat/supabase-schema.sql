@@ -75,7 +75,7 @@ before insert on public.global_chat_messages
 for each row execute function public.limit_global_chat_rate();
 
 -- Idempotently add the table to Supabase Realtime.
-do $
+do $realtime$
 begin
   if not exists (
     select 1 from pg_publication_tables
