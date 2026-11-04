@@ -1,17 +1,21 @@
 (() => {
+  "use strict";
   const cfg = window.UNSAIDLY_CHAT_CONFIG || {};
   const hasConfig = /^https?:\/\//.test(cfg.supabaseUrl || "") && cfg.supabaseAnonKey && !/PASTE_|PLACEHOLDER/i.test(cfg.supabaseAnonKey);
-  const supabaseReady = hasConfig && window.supabase?.createClient;
+  const supabaseReady = Boolean(hasConfig && window.supabase?.createClient);
   const db = supabaseReady ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+  const workerReady = /^https?:\/\//.test(cfg.workerUrl || "");
   const $ = (id) => document.getElementById(id);
   const messagesEl = $("messages"), input = $("messageInput"), sendBtn = $("sendButton");
   const anonId = getAnonId();
   const anonName = "Anonymous #" + anonId.slice(-4).toUpperCase();
-  let channel = null, sentAt = 0, loadedIds = new Set();
+  let channel = null, sentAt = 0, loadedIds = new Set(), turnstileWidget = null, turnstileToken = "";
   $("identityLabel").innerHTML = "YOU ARE <b>" + anonName + "</b>";
   $("year").textContent = new Date().getFullYear();
-  $("connectionStatus").textContent = supabaseReady ? "Connecting to global chat…" : "Preview mode · backend not configured";
-  if (!supabaseReady) $("connectionStatus").classList.add("error");
+
+  if (!supabaseReady) status("Setup needed · Supabase config", "error");
+  else if (!workerReady) status("Setup needed · Worker API config", "error");
+  else status("Connecting to global chat…", "");
 
   function getAnonId() {
     let id = localStorage.getItem("unsaidly_chat_id");
@@ -44,7 +48,7 @@
   }
   async function loadRecent() {
     const { data, error } = await db.from("global_chat_messages").select("id,anon_id,nickname,body,created_at").order("created_at", {ascending:false}).limit(100);
-    if (error) { console.error(error); status("Could not load messages. Check Supabase setup.", "error"); return; }
+    if (error) { console.error(error); status("Cannot load messages · check Supabase", "error"); return; }
     (data || []).reverse().forEach(renderMessage);
     showWelcome();
   }
@@ -59,30 +63,67 @@
     });
     channel.subscribe((state) => {
       if (state === "SUBSCRIBED") {
-        status("Connected · global room", "connected");
+        status(workerReady ? "Connected · global room" : "Connected · API setup needed", workerReady ? "connected" : "error");
         channel.track({anon_id:anonId, joined_at:new Date().toISOString()});
-      } else if (state === "CHANNEL_ERROR" || state === "TIMED_OUT") status("Connection issue", "error");
+      } else if (state === "CHANNEL_ERROR" || state === "TIMED_OUT") status("Realtime connection issue", "error");
     });
   }
   function status(text, cls) {
     const el = $("connectionStatus"); el.textContent = text; el.className = "connection-status " + (cls || "");
   }
+  function resetTurnstile() {
+    turnstileToken = "";
+    if (turnstileWidget !== null && window.turnstile) window.turnstile.reset(turnstileWidget);
+  }
+  function getTurnstileToken() {
+    if (cfg.turnstileSiteKey && !turnstileToken) throw new Error("Complete the security check first.");
+    return turnstileToken;
+  }
+  function mountTurnstile(attempt = 0) {
+    const container = $("turnstileContainer");
+    if (!cfg.turnstileSiteKey) return;
+    container.hidden = false;
+    if (window.turnstile?.render) {
+      turnstileWidget = window.turnstile.render(container, {
+        sitekey: cfg.turnstileSiteKey,
+        theme: "dark",
+        callback: token => { turnstileToken = token; updateInput(); },
+        "expired-callback": () => { turnstileToken = ""; updateInput(); },
+        "error-callback": () => { turnstileToken = ""; status("Security check error · reload and retry", "error"); updateInput(); }
+      });
+    } else if (attempt < 30) setTimeout(() => mountTurnstile(attempt + 1), 300);
+    else status("Turnstile failed to load", "error");
+  }
+  async function postToWorker(path, payload) {
+    if (!workerReady) throw new Error("Worker API URL is not configured in config.js.");
+    const response = await fetch(cfg.workerUrl.replace(/\/$/, "") + path, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({...payload, turnstile_token:getTurnstileToken()})
+    });
+    let result = {};
+    try { result = await response.json(); } catch {}
+    if (!response.ok) throw new Error(result.error || "Request failed (" + response.status + ")");
+    return result;
+  }
   async function sendMessage() {
     const body = input.value.trim();
-    if (!body || body.length > 600 || !db) return;
+    if (!body || body.length > 600 || !workerReady || sendBtn.disabled) return;
     if (Date.now() - sentAt < 1800) { status("Slow down a little…", "error"); return; }
     sentAt = Date.now(); sendBtn.disabled = true;
-    const {error} = await db.from("global_chat_messages").insert({anon_id:anonId,nickname:anonName,body});
-    if (error) { status("Message not sent · " + (error.message || "try again"), "error"); }
-    else { input.value = ""; updateInput(); status("Connected · global room", "connected"); }
-    sendBtn.disabled = !input.value.trim() || !db;
+    try {
+      await postToWorker("/api/message", {anon_id:anonId,nickname:anonName,body});
+      input.value = ""; updateInput(); resetTurnstile(); status("Connected · global room", "connected");
+    } catch (e) {
+      status(e.message || "Message not sent · retry", "error");
+      if (/security check/i.test(e.message)) resetTurnstile();
+    } finally { updateInput(); }
   }
   async function translateMessage(button) {
     const row = button.closest(".message"), bubble = row.querySelector(".bubble");
     const original = bubble.childNodes[0]?.textContent || bubble.textContent;
     const target = $("languageSelect").value;
     if (!cfg.translateUrl) {
-      addTranslation(bubble, "Translation is not configured yet. Set up a LibreTranslate URL in config.js.");
+      addTranslation(bubble, "Translation service not configured yet. Add a LibreTranslate URL in config.js.");
       return;
     }
     button.textContent = "Translating…"; button.disabled = true;
@@ -94,7 +135,7 @@
       if (!response.ok) throw new Error("Translation service returned " + response.status);
       const data = await response.json(); addTranslation(bubble, data.translatedText || "No translation returned.");
       button.textContent = "Translated";
-    } catch(e) { button.textContent = "Translate"; addTranslation(bubble, "Translation failed. Please try again."); console.error(e); }
+    } catch(e) { button.textContent = "Translate"; addTranslation(bubble, "Translation failed. Check translation service or try again."); console.error(e); }
     finally { button.disabled = false; }
   }
   function addTranslation(bubble, text) {
@@ -103,7 +144,7 @@
   }
   function updateInput() {
     $("charCount").textContent = input.value.length;
-    sendBtn.disabled = !input.value.trim() || !db;
+    sendBtn.disabled = !input.value.trim() || !workerReady || (Boolean(cfg.turnstileSiteKey) && !turnstileToken);
     input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight,140) + "px";
   }
   messagesEl.addEventListener("click", async e => {
@@ -112,20 +153,30 @@
     const report = e.target.closest("[data-report]");
     if (report) {
       const messageId = report.closest(".message").dataset.id;
-      if (!db) return;
-      const reason = prompt("Report this message? (spam, threats, doxxing, harassment)");
+      const reason = prompt("Why are you reporting this? (spam, threats, doxxing, harassment)");
       if (!reason) return;
-      const {error} = await db.from("global_chat_reports").insert({message_id:messageId,reporter_anon_id:anonId,reason:reason.slice(0,250)});
-      if (error) alert("Could not submit report. Please try again.");
-      else {report.textContent="Reported";report.disabled=true;}
+      report.disabled = true;
+      try {
+        await postToWorker("/api/report", {message_id:messageId,reporter_anon_id:anonId,reason:reason.slice(0,250)});
+        report.textContent = "Reported";
+        resetTurnstile();
+      } catch (error) {
+        report.disabled = false;
+        alert(error.message || "Could not submit report. Please try again.");
+        resetTurnstile();
+      }
     }
   });
   input.addEventListener("input", updateInput);
   input.addEventListener("keydown", e => { if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();} });
   $("messageForm").addEventListener("submit", e => {e.preventDefault();sendMessage();});
   $("rulesButton").addEventListener("click", () => $("infoDialog").showModal());
-  $("privacyLink").addEventListener("click", e => {e.preventDefault();$("dialogTitle").textContent="Privacy & safety";$("dialogBody").textContent="No account or real name is required. Your anonymous browser ID is used to label messages and presence. Do not share your address, phone number, passwords or other private details. Public chat messages are visible to everyone in the room."; $("infoDialog").showModal();});
+  $("privacyLink").addEventListener("click", e => {
+    e.preventDefault(); $("dialogTitle").textContent="Privacy & safety";
+    $("dialogBody").textContent="No account or real name is required. Your anonymous browser ID is stored locally to label messages and presence. Chat messages are public to everyone in the room. Do not share your address, phone number, passwords or other private details. Anonymous chat does not mean network metadata is invisible to the hosting provider.";
+    $("infoDialog").showModal();
+  });
   $("closeDialog").addEventListener("click", () => $("infoDialog").close());
   $("dialogOk").addEventListener("click", () => $("infoDialog").close());
-  updateInput(); showWelcome(); connect();
+  updateInput(); showWelcome(); mountTurnstile(); connect();
 })();
