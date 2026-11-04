@@ -71,7 +71,7 @@ export default {
     const now = Date.now();
     const previous = rateMap.get(anonId) || [];
     const recent = previous.filter(ts => now - ts < 60_000);
-    if (recent.length >= 20 || (recent.length && now - recent[recent.length - 1] < 1800)) {
+    if (recent.length >= 20 || (recent.length && now - recent[recent.length - 1] < 2100)) {
       return json({ error: "You're sending too fast. Please wait a moment." }, 429, origin);
     }
     recent.push(now);
