@@ -85,7 +85,7 @@ begin
   ) then
     alter publication supabase_realtime add table public.global_chat_messages;
   end if;
-end $;
+end $realtime$;
 
 -- Suggested retention (run manually after choosing a retention period):
 -- delete from public.global_chat_messages where created_at < now() - interval '30 days';
